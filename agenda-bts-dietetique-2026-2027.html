@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda BTS Diététique 2026-2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght=700&family=Lato:wght=300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --emerald: #046B4E;
+    --emerald-light: #059669;
+    --emerald-dark: #034B37;
+    --emerald-pale: #D1FAE5;
+    --text-dark: #1a2e25;
+    --text-mid: #374151;
+    --border-radius: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #f0f4f2;
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ======= BANNIÈRE ======= */
+  .banner {
+    background: var(--emerald);
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 3px 10px rgba(4,107,78,0.4);
+    position: relative;
+  }
+
+  .banner-icon { font-size: 42px; line-height: 1; flex-shrink: 0; width: 80px; text-align: center; }
+
+  .banner-title {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* ======= BARRE INFO ======= */
+  .info-bar {
+    background: white;
+    border-bottom: 3px solid var(--emerald-pale);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .info-left { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--text-mid); }
+  .info-left span { display: flex; align-items: center; gap: 5px; }
+  .info-left .icon { color: var(--emerald); font-size: 14px; }
+
+  .info-center { display: flex; flex-direction: column; gap: 7px; align-items: center; }
+
+  .sync-status {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  .btn {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .btn-reset { background: #FEF3C7; color: #92400E; border: 1.5px solid #F59E0B; }
+  .btn-reset:hover { background: #FDE68A; }
+  .btn-stages { background: var(--emerald-pale); color: var(--emerald-dark); border: 1.5px solid var(--emerald); }
+  .btn-stages:hover { background: #A7F3D0; }
+
+  .info-right {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--emerald-dark);
+    text-align: right;
+    border-left: 3px solid var(--emerald);
+    padding-left: 12px;
+  }
+
+  /* ======= LÉGENDE ======= */
+  .legend { background: white; padding: 8px 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border-bottom: 2px solid #e5e7eb; font-size: 11.5px; }
+  .legend-title { font-weight: 700; color: var(--emerald-dark); margin-right: 5px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ======= CALENDRIER ======= */
+  .calendar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px 20px 30px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 1100px) { .calendar-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 780px)  { .calendar-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px)  { .calendar-grid { grid-template-columns: 1fr; } }
+
+  .month-card { background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .month-header { height: 36px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px; }
+  .month-body { padding: 6px; border: 2.5px solid var(--month-color, #888); border-top: none; border-radius: 0 0 var(--border-radius) var(--border-radius); }
+  .day-names { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 2px; }
+  .day-name { text-align: center; font-size: 9.5px; font-weight: 700; color: #6b7280; padding: 2px 0; text-transform: uppercase; }
+  .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+
+  .day-cell {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 3px; cursor: pointer; position: relative; transition: transform 0.1s; border: 1px solid #e5e7eb; background: white; min-height: 26px;
+  }
+  .day-cell:hover { transform: scale(1.1); z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  .day-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+  .day-cell.empty:hover { transform: none; box-shadow: none; }
+  .day-cell.sunday { color: #ef4444; background: #fff5f5; }
+  .day-cell.saturday { color: #f97316; background: #fff8f1; }
+
+  .day-cell.ferie { background: #fef9c3 !important; color: #854d0e !important; font-weight: 700; }
+  .day-cell.vacances { background: #dbeafe !important; color: #1e40af; }
+  .day-cell.stage-2diet { background: #ede9fe !important; color: #5b21b6; }
+  .day-cell.stage-1diet { background: #fce7f3 !important; color: #9d174d; }
+
+  .day-cell.ev-reunion { background: #ef4444 !important; color: white !important; }
+  .day-cell.ev-rdv { background: #3b82f6 !important; color: white !important; }
+  .day-cell.ev-contact { background: #22c55e !important; color: white !important; }
+  .day-cell.ev-multi { background: #f97316 !important; color: white !important; }
+  .day-cell.ev-noted { box-shadow: inset 0 0 0 2px #6366f1; }
+
+  /* ======= MODAL ======= */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden; }
+  .modal-header { background: var(--emerald); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .modal-close { background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;}
+  .modal-body { padding: 16px 18px; }
+  .checkbox-group { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+
+  .checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 7px 12px; border-radius: 20px; border: 2px solid #e5e7eb; font-size: 13px; font-weight: 600; }
+  .checkbox-label input { display: none; }
+  .checkbox-label.reunion.checked { background: #ef4444; color: white; border-color: #ef4444; }
+  .checkbox-label.rdv.checked { background: #3b82f6; color: white; border-color: #3b82f6; }
+  .checkbox-label.contact.checked { background: #22c55e; color: white; border-color: #22c55e; }
+
+  .modal-textarea { width: 100%; border: 1.5px solid #d1d5db; border-radius: 6px; padding: 8px 10px; font-family: 'Lato', sans-serif; font-size: 12.5px; margin-bottom: 10px; }
+  .modal-textarea-label { font-size: 11.5px; font-weight: 700; color: var(--emerald-dark); margin-bottom: 4px; display: block; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+  .btn-save { background: var(--emerald); color: white; padding: 8px 18px; border: none; border-radius: 20px; cursor: pointer; font-weight: 700; }
+  .btn-delete { background: #fef2f2; color: #ef4444; padding: 8px 14px; border: 1.5px solid #ef4444; border-radius: 20px; cursor: pointer; font-weight: 700; }
+
+  .gcal-box { margin-top: 12px; padding: 10px 14px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; text-align: center; }
+  .gcal-btn { color: #4285F4; text-decoration: none; font-weight: bold; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <div class="banner-icon">👥</div>
+  <div class="banner-title">📚 AGENDA BTS DIÉTÉTIQUE<br>ANNÉE 2026–2027</div>
+  <div class="banner-icon"></div>
+</div>
+
+<div class="info-bar">
+  <div class="info-left">
+    <span><span class="icon">👤</span> <strong>TECHER Jacquelin</strong></span>
+    <span><span class="icon">✉️</span> jacquelin.techer@ac-reunion.fr</span>
+  </div>
+  <div class="info-center">
+    <div class="sync-status" id="syncStatus">🔄 Connexion...</div>
+    <div style="display: flex; gap: 10px; margin-top: 5px;">
+      <button class="btn btn-reset" onclick="resetCalendar()">🔄 Réinitialiser</button>
+      <button class="btn btn-stages" onclick="openStagesModal()">📝 Stages</button>
+    </div>
+  </div>
+  <div class="info-right">📅 ANNÉE SCOLAIRE<br>2026–2027</div>
+</div>
+
+<div class="legend">
+  <span class="legend-title">Légende :</span>
+  <div class="legend-item"><div class="legend-dot" style="background:#fef9c3;"></div> Férié</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#dbeafe;"></div> Vacances</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ede9fe;"></div> Stage 2DIET</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fce7f3;"></div> Stage 1DIET</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Réunion</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div> RDV</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Contact</div>
+</div>
+
+<div class="calendar-grid" id="calendarGrid"></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">📅 Détails</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="checkbox-group">
+        <label class="checkbox-label reunion" id="lblReunion"><input type="checkbox" id="chkReunion" onchange="updateCheckboxStyle('Reunion')">🤝 Réunion</label>
+        <label class="checkbox-label rdv" id="lblRdv"><input type="checkbox" id="chkRdv" onchange="updateCheckboxStyle('Rdv')">📌 RDV</label>
+        <label class="checkbox-label contact" id="lblContact"><input type="checkbox" id="chkContact" onchange="updateCheckboxStyle('Contact')">📞 Contact</label>
+      </div>
+      <label class="modal-textarea-label">📋 Documents / Participants</label>
+      <textarea class="modal-textarea" id="textDocuments" rows="2"></textarea>
+      <label class="modal-textarea-label">✏️ Précisions / Notes</label>
+      <textarea class="modal-textarea" id="textNotes" rows="2"></textarea>
+
+      <div class="gcal-box">
+        <a id="gcalLink" href="#" target="_blank" class="gcal-btn" onclick="return false;">Ouvrir dans Google Calendar</a>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-delete" onclick="deleteEvent()">🗑 Supprimer</button>
+        <button class="btn-save" onclick="saveEvent()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay stages-modal" id="stagesModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📝 Modifier les périodes de stages</h3>
+      <button class="modal-close" onclick="closeStagesModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="stagesForm"></div>
+      <div class="modal-actions">
+        <button class="btn-save" onclick="saveStages()">💾 Mettre à jour</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== COLLER VOTRE URL ICI ====================
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwaaI_gpQ49xd5xIwQmnnqhbQQSxHgNordM_cf7eL2NNFaYYN409zZVWV5CE8ivldpR/exec";
+// ==============================================================
+
+const MONTH_COLORS = ['#2E7D32','#1565C0','#6A1B9A','#AD1457','#E65100','#F57F17','#00695C','#4527A0','#283593','#558B2F','#BF360C','#00838F'];
+const MONTH_NAMES = ['Août','Septembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet'];
+const MONTHS_DATA = [{y:2026,m:7}, {y:2026,m:8}, {y:2026,m:9}, {y:2026,m:10}, {y:2026,m:11},{y:2027,m:0}, {y:2027,m:1}, {y:2027,m:2}, {y:2027,m:3}, {y:2027,m:4}, {y:2027,m:5}, {y:2027,m:6}];
+const DAY_NAMES_SHORT = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+const FERIES = { '2026-08-15':'Assomption','2026-11-01':'Toussaint','2026-11-11':'Armistice','2026-12-20':'Abolition esclavage','2026-12-25':'Noël','2027-01-01':'Jour de l\'An','2027-03-29':'Lundi de Pâques','2027-05-01':'Fête du Travail','2027-05-06':'Ascension','2027-05-08':'Victoire 1945','2027-05-17':'Lundi de Pentecôte','2027-07-14':'Fête Nationale' };
+const VACANCES = [
+  { start: '2026-10-10', end: '2026-10-25', label: 'Vacances Toussaint' },
+  { start: '2026-12-19', end: '2027-02-01', label: 'Vacances été austral' },
+  { start: '2027-03-16', end: '2027-03-29', label: 'Vacances 3ème période' },
+  { start: '2027-05-05', end: '2027-05-18', label: 'Vacances 4ème période' }
+];
+
+let STAGES = [
+  { start: '2026-11-23', end: '2026-12-11', label: 'Stage S.P 2', type: '2DIET', color: 'stage-2diet' },
+  { start: '2027-02-08', end: '2027-03-05', label: 'Stage RESTOCO', type: '1DIET', color: 'stage-1diet' },
+  { start: '2027-03-22', end: '2027-04-23', label: 'Stage Thérapeutique 1', type: '2DIET', color: 'stage-2diet' },
+  { start: '2027-05-31', end: '2027-06-18', label: 'Stage S.P 1', type: '1DIET', color: 'stage-1diet' },
+  { start: '2027-06-14', end: '2027-07-16', label: 'Stage Thérapeutique 2', type: '2DIET', color: 'stage-2diet' }
+];
+
+let events = {};
+let currentKey = '';
+
+function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+function isInRange(key, start, end) { return key >= start && key <= end; }
+
+function getDayClass(key, dow) {
+  let cls = '';
+  if (dow === 6) cls += ' sunday'; else if (dow === 5) cls += ' saturday';
+  if (FERIES[key]) cls += ' ferie';
+  else {
+    for (const v of VACANCES) { if (isInRange(key, v.start, v.end)) { cls += ' vacances'; break; } }
+    for (const s of STAGES) { if (isInRange(key, s.start, s.end)) { cls += ' ' + s.color; break; } }
+  }
+  const ev = events[key];
+  if (ev) {
+    const count = (ev.reunion ? 1 : 0) + (ev.rdv ? 1 : 0) + (ev.contact ? 1 : 0);
+    if (count >= 2) cls += ' ev-multi';
+    else if (ev.reunion) cls += ' ev-reunion';
+    else if (ev.rdv) cls += ' ev-rdv';
+    else if (ev.contact) cls += ' ev-contact';
+    if (ev.documents || ev.notes) cls += ' ev-noted';
+  }
+  return cls;
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  grid.innerHTML = '';
+  MONTHS_DATA.forEach((md, idx) => {
+    const { y, m } = md;
+    const monthName = MONTH_NAMES[idx];
+    const color = MONTH_COLORS[idx];
+    const firstDay = new Date(y, m, 1);
+    const lastDay = new Date(y, m + 1, 0).getDate();
+    let startDow = (firstDay.getDay() + 6) % 7;
+
+    const card = document.createElement('div');
+    card.className = 'month-card';
+    card.style.setProperty('--month-color', color);
+
+    const header = document.createElement('div');
+    header.className = 'month-header';
+    header.style.background = color;
+    header.textContent = `${monthName} ${y}`;
+    card.appendChild(header);
+
+    const body = document.createElement('div');
+    body.className = 'month-body';
+    body.style.borderColor = color;
+
+    const dn = document.createElement('div');
+    dn.className = 'day-names';
+    DAY_NAMES_SHORT.forEach(n => { const d = document.createElement('div'); d.className = 'day-name'; d.textContent = n; dn.appendChild(d); });
+    body.appendChild(dn);
+
+    const dg = document.createElement('div');
+    dg.className = 'days-grid';
+
+    for (let i = 0; i < startDow; i++) { const e = document.createElement('div'); e.className = 'day-cell empty'; dg.appendChild(e); }
+
+    for (let d = 1; d <= lastDay; d++) {
+      const key = dateKey(y, m, d);
+      const date = new Date(y, m, d);
+      const dow = (date.getDay() + 6) % 7;
+      const cell = document.createElement('div');
+      cell.className = 'day-cell' + getDayClass(key, dow);
+      cell.innerHTML = `<span class="day-num">${d}</span>`;
+      cell.onclick = () => openModal(key, `${DAY_NAMES_SHORT[dow]} ${d} ${monthName} ${y}`);
+      dg.appendChild(cell);
+    }
+    body.appendChild(dg);
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+}
+
+// ======= COUCHE GOOGLE SHEETS SYNCHRONISATION =======
+async function fetchFromSheet() {
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.includes("VOTRE_URL")) {
+    updateStatus("⚠️ Configurez l'URL Apps Script", "#fef3c7", "#b45309");
+    return;
+  }
+  updateStatus("🔄 Chargement Google Sheet...", "#e2e8f0", "#475569");
+  try {
+    const res = await fetch(SHEET_WEBAPP_URL);
+    if (res.ok) {
+      events = await res.json();
+      renderCalendar();
+      updateStatus("🟢 Synchronisé", "#dcfce7", "#15803d");
+    } else {
+      updateStatus("🔴 Erreur de lecture", "#fee2e2", "#b91c1c");
+    }
+  } catch (e) {
+    updateStatus("⚠️ Mode Hors-ligne", "#fef3c7", "#b45309");
+  }
+}
+
+async function saveToSheet() {
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.includes("VOTRE_URL")) return;
+  updateStatus("⏳ Sauvegarde en cours...", "#e0f2fe", "#0369a1");
+  try {
+    const res = await fetch(SHEET_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(events)
+    });
+    updateStatus("🟢 Modifié (Actualisation...)", "#dcfce7", "#15803d");
+    setTimeout(fetchFromSheet, 1000);
+  } catch (e) {
+    updateStatus("❌ Échec sauvegarde", "#fee2e2", "#b91c1c");
+  }
+}
+
+function updateStatus(text, bg, color) {
+  const statusEl = document.getElementById('syncStatus');
+  statusEl.textContent = text;
+  statusEl.style.background = bg;
+  statusEl.style.color = color;
+}
+
+// ======= ACTIONS POPUPS =======
+function openModal(key, label) {
+  currentKey = key;
+  document.getElementById('modalTitle').textContent = '📅 ' + label;
+  const ev = events[key] || {};
+  document.getElementById('chkReunion').checked = !!ev.reunion;
+  document.getElementById('chkRdv').checked = !!ev.rdv;
+  document.getElementById('chkContact').checked = !!ev.contact;
+  document.getElementById('textDocuments').value = ev.documents || '';
+  document.getElementById('textNotes').value = ev.notes || '';
+  updateCheckboxStyle('Reunion'); updateCheckboxStyle('Rdv'); updateCheckboxStyle('Contact');
+  updateGCalLink(key, ev);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+function updateCheckboxStyle(type) {
+  const chk = document.getElementById('chk' + type);
+  const lbl = document.getElementById('lbl' + type);
+  if (chk.checked) lbl.classList.add('checked'); else lbl.classList.remove('checked');
+}
+
+function saveEvent() {
+  const reunion = document.getElementById('chkReunion').checked;
+  const rdv = document.getElementById('chkRdv').checked;
+  const contact = document.getElementById('chkContact').checked;
+  const documents = document.getElementById('textDocuments').value.trim();
+  const notes = document.getElementById('textNotes').value.trim();
+
+  if (!reunion && !rdv && !contact && !documents && !notes) { delete events[currentKey]; } 
+  else { events[currentKey] = { reunion, rdv, contact, documents, notes }; }
+
+  closeModal();
+  renderCalendar();
+  saveToSheet();
+}
+
+function deleteEvent() {
+  delete events[currentKey];
+  closeModal();
+  renderCalendar();
+  saveToSheet();
+}
+
+function resetCalendar() {
+  if (confirm('⚠️ Effacer TOUS vos événements ?')) {
+    events = {};
+    renderCalendar();
+    saveToSheet();
+  }
+}
+
+function updateGCalLink(key, ev) {
+  const [y, m, d] = key.split('-').map(Number);
+  const title = encodeURIComponent(`⏰ Événement – Agenda BTS`);
+  const pad = n => String(n).padStart(2,'0');
+  const startDate = `${y}${pad(m)}${pad(d)}`;
+  const endObj = new Date(y, m - 1, d + 1);
+  const endDate = `${endObj.getFullYear()}${pad(endObj.getMonth()+1)}${pad(endObj.getDate())}`;
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&add=jacquelintecher69@gmail.com`;
+  document.getElementById('gcalLink').href = url;
+}
+
+// ======= COUCHE MODAL STAGES =======
+function openStagesModal() {
+  const form = document.getElementById('stagesForm');
+  form.innerHTML = '';
+  STAGES.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.style.marginBottom = '12px';
+    row.style.padding = '10px';
+    row.style.background = '#f9fafb';
+    row.style.borderRadius = '6px';
+    row.style.border = '1px solid #e5e7eb';
+    row.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" id="stageLabel${i}" value="${s.label}" style="flex:1;padding:5px;font-size:12px;border:1.5px solid #d1d5db;border-radius:4px;">
+        <select id="stageType${i}" style="padding:5px;font-size:12px;border:1.5px solid #d1d5db;border-radius:4px;">
+          <option value="1DIET" ${s.type==='1DIET'?'selected':''}>1DIET</option>
+          <option value="2DIET" ${s.type==='2DIET'?'selected':''}>2DIET</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input type="date" id="stageStart${i}" value="${s.start}" style="padding:5px;font-size:12px;border:1.5px solid #d1d5db;border-radius:4px;">
+        <label style="font-size:11px;color:#6b7280;">au</label>
+        <input type="date" id="stageEnd${i}" value="${s.end}" style="padding:5px;font-size:12px;border:1.5px solid #d1d5db;border-radius:4px;">
+      </div>
+    `;
+    form.appendChild(row);
+  });
+  document.getElementById('stagesModalOverlay').classList.add('open');
+}
+
+function closeStagesModal() { document.getElementById('stagesModalOverlay').classList.remove('open'); }
+
+function saveStages() {
+  STAGES.forEach((s, i) => {
+    const label = document.getElementById(`stageLabel${i}`).value.trim();
+    const type = document.getElementById(`stageType${i}`).value;
+    const start = document.getElementById(`stageStart${i}`).value;
+    const end = document.getElementById(`stageEnd${i}`).value;
+    if (label && start && end) {
+      STAGES[i] = { ...s, label, type, start, end, color: type === '2DIET' ? 'stage-2diet' : 'stage-1diet' };
+    }
+  });
+  closeStagesModal();
+  renderCalendar();
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// INITIALISATION
+renderCalendar();
+fetchFromSheet();
+</script>
+</body>
+</html>
