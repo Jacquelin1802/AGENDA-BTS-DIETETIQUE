@@ -137,13 +137,13 @@
 
   .day-cell.ferie { background: #fef9c3 !important; color: #854d0e !important; font-weight: 700; }
   .day-cell.vacances { background: #dbeafe !important; color: #1e40af; }
-  .day-cell.stage-2diet { background: #ede9fe !important; color: #5b21b6; }
-  .day-cell.stage-1diet { background: #fce7f3 !important; color: #9d174d; }
+  .day-cell.stage-2diet { background: #7c3aed !important; color: #fff; font-weight:700; }
+  .day-cell.stage-1diet { background: #db2777 !important; color: #fff; font-weight:700; }
   /* Chevauchements - split diagonal */
-  .day-cell.split-1diet-2diet { background: linear-gradient(135deg, #fce7f3 50%, #ede9fe 50%) !important; color: #333; }
-  .day-cell.split-vac-1diet { background: linear-gradient(135deg, #dbeafe 50%, #fce7f3 50%) !important; color: #333; }
-  .day-cell.split-vac-2diet { background: linear-gradient(135deg, #dbeafe 50%, #ede9fe 50%) !important; color: #333; }
-  .day-cell.split-vac-1diet-2diet { background: linear-gradient(135deg, #dbeafe 33%, #fce7f3 33%, #fce7f3 66%, #ede9fe 66%) !important; color: #333; }
+  .day-cell.split-1diet-2diet { background: linear-gradient(135deg, #db2777 50%, #7c3aed 50%) !important; color: #fff; font-weight:700; }
+  .day-cell.split-vac-1diet { background: linear-gradient(135deg, #dbeafe 50%, #db2777 50%) !important; color: #333; font-weight:700; }
+  .day-cell.split-vac-2diet { background: linear-gradient(135deg, #dbeafe 50%, #7c3aed 50%) !important; color: #333; font-weight:700; }
+  .day-cell.split-vac-1diet-2diet { background: linear-gradient(135deg, #dbeafe 33%, #db2777 33%, #db2777 66%, #7c3aed 66%) !important; color: #fff; font-weight:700; }
 
   .day-cell.ev-reunion { background: #ef4444 !important; color: white !important; }
   .day-cell.ev-rdv { background: #3b82f6 !important; color: white !important; }
@@ -194,6 +194,7 @@
     <div style="display: flex; gap: 10px; margin-top: 5px;">
       <button class="btn btn-reset" onclick="resetCalendar()">🔄 Réinitialiser</button>
       <button class="btn btn-stages" onclick="openStagesModal()">📝 Stages</button>
+      <button style="padding:6px 14px;border-radius:8px;border:none;background:#475569;color:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:bold;margin-right:4px" onclick="prevYear()">← Année précédente</button>
       <button style="padding:6px 14px;border-radius:8px;border:none;background:#6d28d9;color:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:bold" onclick="nextYear()">📅 Année suivante →</button>
     </div>
   </div>
@@ -202,9 +203,9 @@
 
 <div class="legend">
   <span class="legend-title">Légende :</span>
-  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#fce7f3 50%,#ede9fe 50%);"></div> Stage 1DIET+2DIET</div>
-  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#dbeafe 50%,#fce7f3 50%);"></div> Vac.+Stage 1DIET</div>
-  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#dbeafe 50%,#ede9fe 50%);"></div> Vac.+Stage 2DIET</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#db2777 50%,#7c3aed 50%);"></div> Stage 1DIET+2DIET</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#dbeafe 50%,#db2777 50%);"></div> Vac.+Stage 1DIET</div>
+  <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#dbeafe 50%,#7c3aed 50%);"></div> Vac.+Stage 2DIET</div>
   <div class="legend-item"><div class="legend-dot" style="background:#fef9c3;"></div> Férié</div>
   <div class="legend-item"><div class="legend-dot" style="background:#dbeafe;"></div> Vacances</div>
   <div class="legend-item"><div class="legend-dot" style="background:#ede9fe;"></div> Stage 2DIET</div>
@@ -267,11 +268,11 @@ const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwaaI_gpQ49xd5
 
 const MONTH_COLORS = ['#2E7D32','#1565C0','#6A1B9A','#AD1457','#E65100','#F57F17','#00695C','#4527A0','#283593','#558B2F','#BF360C','#00838F'];
 const MONTH_NAMES = ['Août','Septembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet'];
-const MONTHS_DATA = [{y:2026,m:7}, {y:2026,m:8}, {y:2026,m:9}, {y:2026,m:10}, {y:2026,m:11},{y:2027,m:0}, {y:2027,m:1}, {y:2027,m:2}, {y:2027,m:3}, {y:2027,m:4}, {y:2027,m:5}, {y:2027,m:6}];
+let MONTHS_DATA = [{y:2026,m:7}, {y:2026,m:8}, {y:2026,m:9}, {y:2026,m:10}, {y:2026,m:11},{y:2027,m:0}, {y:2027,m:1}, {y:2027,m:2}, {y:2027,m:3}, {y:2027,m:4}, {y:2027,m:5}, {y:2027,m:6}];
 const DAY_NAMES_SHORT = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 
-const FERIES = { '2026-08-15':'Assomption','2026-11-01':'Toussaint','2026-11-11':'Armistice','2026-12-20':'Abolition esclavage','2026-12-25':'Noël','2027-01-01':'Jour de l\'An','2027-03-29':'Lundi de Pâques','2027-05-01':'Fête du Travail','2027-05-06':'Ascension','2027-05-08':'Victoire 1945','2027-05-17':'Lundi de Pentecôte','2027-07-14':'Fête Nationale' };
-const VACANCES = [
+let FERIES = { '2026-08-15':'Assomption','2026-11-01':'Toussaint','2026-11-11':'Armistice','2026-12-20':'Abolition esclavage','2026-12-25':'Noël','2027-01-01':'Jour de l\'An','2027-03-29':'Lundi de Pâques','2027-05-01':'Fête du Travail','2027-05-06':'Ascension','2027-05-08':'Victoire 1945','2027-05-17':'Lundi de Pentecôte','2027-07-14':'Fête Nationale' };
+let VACANCES = [
   { start: '2026-10-10', end: '2026-10-25', label: 'Vacances Toussaint' },
   { start: '2026-12-19', end: '2027-02-01', label: 'Vacances été austral' },
   { start: '2027-03-16', end: '2027-03-29', label: 'Vacances 3ème période' },
@@ -319,6 +320,39 @@ function getDayClass(key, dow) {
     if (ev.documents || ev.notes) cls += ' ev-noted';
   }
   return cls;
+}
+
+function prevYear() {
+  if(!confirm('Revenir à l\'année scolaire précédente ?')) return;
+
+  MONTHS_DATA = MONTHS_DATA.map(md => ({y: md.y - 1, m: md.m}));
+
+  VACANCES.forEach(v => {
+    v.start = decalerDate(v.start, -1);
+    v.end = decalerDate(v.end, -1);
+  });
+
+  STAGES.forEach(s => {
+    s.start = decalerDate(s.start, -1);
+    s.end = decalerDate(s.end, -1);
+  });
+
+  const newFeries = {};
+  Object.keys(FERIES).forEach(k => {
+    const parts = k.split('-');
+    const newKey = (parseInt(parts[0])-1) + '-' + parts[1] + '-' + parts[2];
+    newFeries[newKey] = FERIES[k];
+  });
+  Object.keys(FERIES).forEach(k => delete FERIES[k]);
+  Object.assign(FERIES, newFeries);
+
+  const firstY = MONTHS_DATA[0].y;
+  const lastY = MONTHS_DATA[MONTHS_DATA.length-1].y;
+  const label = document.getElementById('annee-label');
+  if(label) label.textContent = firstY + '–' + lastY;
+
+  renderCalendar();
+  showToast('📅 Retour à l\'année ' + firstY + '-' + lastY + ' effectué !', 3000);
 }
 
 function nextYear() {
